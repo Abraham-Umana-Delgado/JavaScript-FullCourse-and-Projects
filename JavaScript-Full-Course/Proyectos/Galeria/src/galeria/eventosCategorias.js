@@ -1,4 +1,5 @@
 import dataFotos from '../datos/fotos';
+import { cargarImagen } from './cargarImagen';
 const contenedorCategorias = document.getElementById('categorias');
 const galeria = document.getElementById('galeria');
 
@@ -13,10 +14,12 @@ contenedorCategorias.addEventListener('click', (event) => {
         document.body.style.overflow = 'hidden';
 
         const categoriaActiva = event.target.closest('a').dataset.categoria;
+        galeria.dataset.categoria = categoriaActiva;// Aqui recuperamos el ID de la categoria activa en el momento.
+
         const fotos = dataFotos.fotos[categoriaActiva];
-
-
         const carrusel = galeria.querySelector('.galeria__carousel-slides');
+        const { id, descripcion, nombre, ruta } = fotos[0];
+        cargarImagen(id, nombre, ruta, descripcion);
 
         carrusel.innerHTML = ''; // Esta linea de codigo lo que hace es que si cierro una categoria, las fotos del carrusel de esa categoria se eliminan y si abro otra, no se muestran junto a las de la otra categoria.
 
@@ -24,7 +27,7 @@ contenedorCategorias.addEventListener('click', (event) => {
         fotos.forEach((foto) => {
             const slide = `
             <a href="#" class="galeria__carousel-slide">
-            <img class="galeria__carousel-image" src="${foto.ruta}" alt="" />
+            <img class="galeria__carousel-image" src="${foto.ruta}" data-id="${foto.id}" alt="" />
         </a>
     `;
             galeria.querySelector('.galeria__carousel-slides').innerHTML += slide;

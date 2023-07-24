@@ -1,4 +1,3 @@
 import './galeria/cargarCategorias';
-import './galeria/eventosgaleria';
+import './galeria/eventosGaleria';
 import './galeria/eventosCategorias';
-import './galeria/cerrarGaleriaEvento';

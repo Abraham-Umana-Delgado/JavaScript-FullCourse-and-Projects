@@ -473,14 +473,55 @@ categorias.forEach((categoria) => {
 });
 
 //FUNCION CREADA PARA CERRAR LA GALERIA.
+const galeria$3 = document.getElementById('galeria');
 
 const cerrarGaleria = () => {
-    galeria.classList.remove('galeria--active');
+    galeria$3.classList.remove('galeria--active');
     document.body.style.overflow = '';
 };
 
-const contenedorCategorias = document.getElementById('categorias');
+const cargarImagen = (id, nombre, ruta, descripcion) => {
+    galeria.querySelector('.galeria__imagen').src = ruta;
+    galeria.querySelector('.galeria__imagen').dataset.idImagen = id;
+    galeria.querySelector('.galeria__titulo').innerText = nombre;
+    galeria.querySelector('.galeria__descripcion-imagen-activa').innerText = descripcion;
+};
+
+const slideClick = (event) => {
+    let ruta, nombre, descripcion;
+    const galeria = document.getElementById('galeria');
+    const identificador = parseInt(event.target.dataset.id); // Normalmente es una cadena y hay que convertirla a un int para compararla y ejercer la condicion
+    const categoriaActiva = galeria.dataset.categoria;
+
+    dataFotos.fotos[categoriaActiva].forEach(foto => {
+        if(foto.id === identificador){
+            ruta = foto.ruta;
+            nombre = foto.nombre;
+            descripcion = foto.descripcion;
+        }
+    });
+    cargarImagen(identificador, nombre, ruta, descripcion);
+};
+
 const galeria$2 = document.getElementById('galeria');
+
+galeria$2.addEventListener('click', (event) => {
+    const boton = event.target.closest('button'); //Busca el boton mas cercano de abajo hacia arriba en el programa HTML.
+    //Este fragmento lo que va a hacer es filtrar a todos los botones que hay en este apartaod del programa.
+    if (boton?.dataset?.accion === 'cerrar-galeria') {
+        cerrarGaleria();
+    }
+    
+    //Este condicional comprueba primero si lo que acabo de clickear es un BOTON, si lo es ahora se va a comprobar si su DATASET es de tipo ACCION y si no, no pasa nada, y si si se va a mostrar lo que tiene el scope de la funcion.
+
+    if(event.target.dataset.id){
+        slideClick(event);
+    }
+
+});
+
+const contenedorCategorias = document.getElementById('categorias');
+const galeria$1 = document.getElementById('galeria');
 
 //EVENTO DISPARADO PARA ABRIR LA GALERIA CUANDO LE DOY CLICK A UNA CATEGORIA.
 
@@ -489,14 +530,16 @@ contenedorCategorias.addEventListener('click', (event) => {
 
     // Esta linea la hago porque yo quiero que unicamente se abra la galeria cuando yo presiono una categoria que tiene un enlace, caso contrario no quiero eso, quiero que devuelva NULL.
     if (event.target.closest('a')) {
-        galeria$2.classList.add('galeria--active');
+        galeria$1.classList.add('galeria--active');
         document.body.style.overflow = 'hidden';
 
         const categoriaActiva = event.target.closest('a').dataset.categoria;
+        galeria$1.dataset.categoria = categoriaActiva;// Aqui recuperamos el ID de la categoria activa en el momento.
+
         const fotos = dataFotos.fotos[categoriaActiva];
-
-
-        const carrusel = galeria$2.querySelector('.galeria__carousel-slides');
+        const carrusel = galeria$1.querySelector('.galeria__carousel-slides');
+        const { id, descripcion, nombre, ruta } = fotos[0];
+        cargarImagen(id, nombre, ruta, descripcion);
 
         carrusel.innerHTML = ''; // Esta linea de codigo lo que hace es que si cierro una categoria, las fotos del carrusel de esa categoria se eliminan y si abro otra, no se muestran junto a las de la otra categoria.
 
@@ -504,23 +547,11 @@ contenedorCategorias.addEventListener('click', (event) => {
         fotos.forEach((foto) => {
             const slide = `
             <a href="#" class="galeria__carousel-slide">
-            <img class="galeria__carousel-image" src="${foto.ruta}" alt="" />
+            <img class="galeria__carousel-image" src="${foto.ruta}" data-id="${foto.id}" alt="" />
         </a>
     `;
-            galeria$2.querySelector('.galeria__carousel-slides').innerHTML += slide;
+            galeria$1.querySelector('.galeria__carousel-slides').innerHTML += slide;
         });
-        galeria$2.querySelector('.galeria__carousel-slide').classList.add('galeria__carousel-slide--active');
+        galeria$1.querySelector('.galeria__carousel-slide').classList.add('galeria__carousel-slide--active');
     }
-});
-
-const galeria$1 = document.getElementById('galeria');
-
-galeria$1.addEventListener('click', (event) => {
-    const boton = event.target.closest('button'); //Busca el boton mas cercano de abajo hacia arriba en el programa HTML.
-    //Este fragmento lo que va a hacer es filtrar a todos los botones que hay en este apartaod del programa.
-    if (boton?.dataset?.accion === 'cerrar-galeria') {
-        cerrarGaleria();
-    }
-    
-    //Este condicional comprueba primero si lo que acabo de clickear es un BOTON, si lo es ahora se va a comprobar si su DATASET es de tipo ACCION y si no, no pasa nada, y si si se va a mostrar lo que tiene el scope de la funcion.
 });
