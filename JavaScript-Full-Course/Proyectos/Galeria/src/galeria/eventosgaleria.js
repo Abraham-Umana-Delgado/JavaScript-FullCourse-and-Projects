@@ -1,5 +1,7 @@
-import  cerrarGaleria  from "./cerrarGaleria";
+import cerrarGaleria from "./cerrarGaleria";
 import { slideClick } from "./slideClick";
+import { cargarDireccionImagen } from "./cargarImagen";
+import carrouselDireccionImagen from "./carrouselDireccionImagen";
 
 const galeria = document.getElementById('galeria');
 
@@ -9,11 +11,23 @@ galeria.addEventListener('click', (event) => {
     if (boton?.dataset?.accion === 'cerrar-galeria') {
         cerrarGaleria();
     }
-    
+
     //Este condicional comprueba primero si lo que acabo de clickear es un BOTON, si lo es ahora se va a comprobar si su DATASET es de tipo ACCION y si no, no pasa nada, y si si se va a mostrar lo que tiene el scope de la funcion.
 
-    if(event.target.dataset.id){
+    if (event.target.dataset.id) {
         slideClick(event);
+    }
+
+    if (boton?.dataset?.accion === 'siguiente-imagen') {
+        cargarDireccionImagen('siguiente');
+    } else if (boton?.dataset?.accion === 'anterior-imagen') {
+        cargarDireccionImagen('anterior');
+    }
+
+    if (boton?.dataset?.accion === 'siguiente-slide') {
+        carrouselDireccionImagen('siguiente');
+    } else if (boton?.dataset?.accion === 'anterior-slide') {
+        carrouselDireccionImagen('anterior');
     }
 
 });

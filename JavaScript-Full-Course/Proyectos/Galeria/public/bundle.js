@@ -480,11 +480,63 @@ const cerrarGaleria = () => {
     document.body.style.overflow = '';
 };
 
+const galeria$2 = document.getElementById('galeria');
+
+
 const cargarImagen = (id, nombre, ruta, descripcion) => {
-    galeria.querySelector('.galeria__imagen').src = ruta;
-    galeria.querySelector('.galeria__imagen').dataset.idImagen = id;
-    galeria.querySelector('.galeria__titulo').innerText = nombre;
-    galeria.querySelector('.galeria__descripcion-imagen-activa').innerText = descripcion;
+    galeria$2.querySelector('.galeria__imagen').src = ruta;
+    galeria$2.querySelector('.galeria__imagen').dataset.idImagen = id; // Id de las imagenes del carrete
+    galeria$2.querySelector('.galeria__titulo').innerText = nombre;
+    galeria$2.querySelector('.galeria__descripcion-imagen-activa').innerText = descripcion;
+
+    const categoriaActiva = galeria$2.dataset.categoria;// Categoria activa
+    const fotos = dataFotos.fotos[categoriaActiva]; // Las fotos de la categoria activa
+    let indexImagenActual;
+
+    fotos.forEach((foto, index) => {
+        if (foto.id === id) {
+            indexImagenActual = index;
+
+        }
+    });
+
+    if (galeria$2.querySelectorAll('.galeria__carousel-slide').length > 0) {
+        //Eliminamos el activo del slide que estaba por defecto.
+        galeria$2.querySelector('.galeria__carousel-slide--active').classList.remove('galeria__carousel-slide--active');
+
+        //Marcamos el slide que seleccionamos como activo.
+        galeria$2.querySelectorAll('.galeria__carousel-slide')[indexImagenActual].classList.add('galeria__carousel-slide--active');
+    }
+};
+
+const cargarDireccionImagen = (direccion) => {
+
+    const categoriaActiva = galeria$2.dataset.categoria;// Categoria activa
+    const fotos = dataFotos.fotos[categoriaActiva]; // Las fotos de la categoria activa
+    let indexImagenActual;
+    const idImagenActual = parseInt(galeria$2.querySelector('.galeria__imagen').dataset.idImagen);
+
+    fotos.forEach((foto, index) => {
+        if (foto.id === idImagenActual) {
+            indexImagenActual = index;
+        }
+    });
+
+    if (direccion === 'siguiente') {
+        if (fotos[indexImagenActual + 1]) {
+            const { id, nombre, ruta, descripcion } = fotos[indexImagenActual + 1];
+            cargarImagen(id, nombre, ruta, descripcion);
+        } else {
+            alert('No hay mas fotos para mostrar en esta galeria');
+        }
+    } else if (direccion === 'anterior') {
+        if (fotos[indexImagenActual - 1]) {
+            const { id, nombre, ruta, descripcion } = fotos[indexImagenActual - 1];
+            cargarImagen(id, nombre, ruta, descripcion);
+        } else {
+            alert('Esta es la primera foto, si quieres ver mas avanza, ya no puedes retroceder');
+        }
+    }
 };
 
 const slideClick = (event) => {
@@ -503,25 +555,45 @@ const slideClick = (event) => {
     cargarImagen(identificador, nombre, ruta, descripcion);
 };
 
-const galeria$2 = document.getElementById('galeria');
+const carrouselDireccionImagen = (direccion) => {
+    if (direccion === 'siguiente') {
+        console.log('Estoy avanzando');
+    } else if (direccion === 'anterior') {
+        console.log('Estoy retrocediendo');
+    }
+};
 
-galeria$2.addEventListener('click', (event) => {
+const galeria$1 = document.getElementById('galeria');
+
+galeria$1.addEventListener('click', (event) => {
     const boton = event.target.closest('button'); //Busca el boton mas cercano de abajo hacia arriba en el programa HTML.
     //Este fragmento lo que va a hacer es filtrar a todos los botones que hay en este apartaod del programa.
     if (boton?.dataset?.accion === 'cerrar-galeria') {
         cerrarGaleria();
     }
-    
+
     //Este condicional comprueba primero si lo que acabo de clickear es un BOTON, si lo es ahora se va a comprobar si su DATASET es de tipo ACCION y si no, no pasa nada, y si si se va a mostrar lo que tiene el scope de la funcion.
 
-    if(event.target.dataset.id){
+    if (event.target.dataset.id) {
         slideClick(event);
+    }
+
+    if (boton?.dataset?.accion === 'siguiente-imagen') {
+        cargarDireccionImagen('siguiente');
+    } else if (boton?.dataset?.accion === 'anterior-imagen') {
+        cargarDireccionImagen('anterior');
+    }
+
+    if (boton?.dataset?.accion === 'siguiente-slide') {
+        carrouselDireccionImagen('siguiente');
+    } else if (boton?.dataset?.accion === 'anterior-slide') {
+        carrouselDireccionImagen('anterior');
     }
 
 });
 
 const contenedorCategorias = document.getElementById('categorias');
-const galeria$1 = document.getElementById('galeria');
+const galeria = document.getElementById('galeria');
 
 //EVENTO DISPARADO PARA ABRIR LA GALERIA CUANDO LE DOY CLICK A UNA CATEGORIA.
 
@@ -530,14 +602,14 @@ contenedorCategorias.addEventListener('click', (event) => {
 
     // Esta linea la hago porque yo quiero que unicamente se abra la galeria cuando yo presiono una categoria que tiene un enlace, caso contrario no quiero eso, quiero que devuelva NULL.
     if (event.target.closest('a')) {
-        galeria$1.classList.add('galeria--active');
+        galeria.classList.add('galeria--active');
         document.body.style.overflow = 'hidden';
 
         const categoriaActiva = event.target.closest('a').dataset.categoria;
-        galeria$1.dataset.categoria = categoriaActiva;// Aqui recuperamos el ID de la categoria activa en el momento.
+        galeria.dataset.categoria = categoriaActiva;// Aqui recuperamos el ID de la categoria activa en el momento.
 
         const fotos = dataFotos.fotos[categoriaActiva];
-        const carrusel = galeria$1.querySelector('.galeria__carousel-slides');
+        const carrusel = galeria.querySelector('.galeria__carousel-slides');
         const { id, descripcion, nombre, ruta } = fotos[0];
         cargarImagen(id, nombre, ruta, descripcion);
 
@@ -550,8 +622,8 @@ contenedorCategorias.addEventListener('click', (event) => {
             <img class="galeria__carousel-image" src="${foto.ruta}" data-id="${foto.id}" alt="" />
         </a>
     `;
-            galeria$1.querySelector('.galeria__carousel-slides').innerHTML += slide;
+            galeria.querySelector('.galeria__carousel-slides').innerHTML += slide;
         });
-        galeria$1.querySelector('.galeria__carousel-slide').classList.add('galeria__carousel-slide--active');
+        galeria.querySelector('.galeria__carousel-slide').classList.add('galeria__carousel-slide--active');
     }
 });
