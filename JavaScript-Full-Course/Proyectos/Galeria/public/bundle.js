@@ -473,23 +473,23 @@ categorias.forEach((categoria) => {
 });
 
 //FUNCION CREADA PARA CERRAR LA GALERIA.
-const galeria$3 = document.getElementById('galeria');
+const galeria$4 = document.getElementById('galeria');
 
 const cerrarGaleria = () => {
-    galeria$3.classList.remove('galeria--active');
+    galeria$4.classList.remove('galeria--active');
     document.body.style.overflow = '';
 };
 
-const galeria$2 = document.getElementById('galeria');
+const galeria$3 = document.getElementById('galeria');
 
 
 const cargarImagen = (id, nombre, ruta, descripcion) => {
-    galeria$2.querySelector('.galeria__imagen').src = ruta;
-    galeria$2.querySelector('.galeria__imagen').dataset.idImagen = id; // Id de las imagenes del carrete
-    galeria$2.querySelector('.galeria__titulo').innerText = nombre;
-    galeria$2.querySelector('.galeria__descripcion-imagen-activa').innerText = descripcion;
+    galeria$3.querySelector('.galeria__imagen').src = ruta;
+    galeria$3.querySelector('.galeria__imagen').dataset.idImagen = id; // Id de las imagenes del carrete
+    galeria$3.querySelector('.galeria__titulo').innerText = nombre;
+    galeria$3.querySelector('.galeria__descripcion-imagen-activa').innerText = descripcion;
 
-    const categoriaActiva = galeria$2.dataset.categoria;// Categoria activa
+    const categoriaActiva = galeria$3.dataset.categoria;// Categoria activa
     const fotos = dataFotos.fotos[categoriaActiva]; // Las fotos de la categoria activa
     let indexImagenActual;
 
@@ -500,21 +500,21 @@ const cargarImagen = (id, nombre, ruta, descripcion) => {
         }
     });
 
-    if (galeria$2.querySelectorAll('.galeria__carousel-slide').length > 0) {
+    if (galeria$3.querySelectorAll('.galeria__carousel-slide').length > 0) {
         //Eliminamos el activo del slide que estaba por defecto.
-        galeria$2.querySelector('.galeria__carousel-slide--active').classList.remove('galeria__carousel-slide--active');
+        galeria$3.querySelector('.galeria__carousel-slide--active').classList.remove('galeria__carousel-slide--active');
 
         //Marcamos el slide que seleccionamos como activo.
-        galeria$2.querySelectorAll('.galeria__carousel-slide')[indexImagenActual].classList.add('galeria__carousel-slide--active');
+        galeria$3.querySelectorAll('.galeria__carousel-slide')[indexImagenActual].classList.add('galeria__carousel-slide--active');
     }
 };
 
 const cargarDireccionImagen = (direccion) => {
 
-    const categoriaActiva = galeria$2.dataset.categoria;// Categoria activa
+    const categoriaActiva = galeria$3.dataset.categoria;// Categoria activa
     const fotos = dataFotos.fotos[categoriaActiva]; // Las fotos de la categoria activa
     let indexImagenActual;
-    const idImagenActual = parseInt(galeria$2.querySelector('.galeria__imagen').dataset.idImagen);
+    const idImagenActual = parseInt(galeria$3.querySelector('.galeria__imagen').dataset.idImagen);
 
     fotos.forEach((foto, index) => {
         if (foto.id === idImagenActual) {
@@ -555,12 +555,59 @@ const slideClick = (event) => {
     cargarImagen(identificador, nombre, ruta, descripcion);
 };
 
+const galeria$2 = document.getElementById('galeria');
+
 const carrouselDireccionImagen = (direccion) => {
-    if (direccion === 'siguiente') {
-        console.log('Estoy avanzando');
-    } else if (direccion === 'anterior') {
-        console.log('Estoy retrocediendo');
-    }
+
+    const slides = galeria$2.querySelectorAll('.galeria__carousel-slide');
+
+    const options = {
+        root: document.querySelector('.galeria__carousel'),
+        rootMargin: '0px',
+        threshold: 0.9,
+    };
+
+    const observer = new IntersectionObserver((entradas) => {
+        const slidesVisibles = entradas.filter((entrada) => {
+            if (entrada.isIntersecting === true) {
+                return entrada;
+            }
+        });
+
+        if (direccion === 'anterior') {
+            const primerSlideVisible = slidesVisibles[0];
+            const indexPrimerSlideVisible = entradas.indexOf(primerSlideVisible);
+
+            if(indexPrimerSlideVisible >= 1){
+                entradas[indexPrimerSlideVisible - 1].target.scrollIntoView({
+                    behavior: 'smooth', //Comportamiento del scroll que va a tener el carrusel cuando le doy a la flecha de avanzar. SMOOTH hace que el scroll behavior sea suave
+                    inline: 'start' // El ultimo elemento visible del carrusel quiero posicionarlo cuando le de avanzar como el primero
+                });
+            }
+        } else if (direccion === 'siguiente') {
+            const ultimoSlideVisible = slidesVisibles[slidesVisibles.length - 1]; // Accediendo al ultimo slide visible
+            const indexUltimoSlideVisible = entradas.indexOf(ultimoSlideVisible); //Accedo a la posicion del ultimo slide visible.
+            //indexOf - Accede a todos los index (Posiciones) de los slides disponibles en el carrusel y entre parentesis, puede uno filtrar el index de un slide especifico.
+            if (entradas.length - 1 > indexUltimoSlideVisible) {
+                entradas[indexUltimoSlideVisible + 1].target.scrollIntoView({
+                    behavior: 'smooth', //Comportamiento del scroll que va a tener el carrusel cuando le doy a la flecha de avanzar. SMOOTH hace que el scroll behavior sea suave
+                    inline: 'start' // El ultimo elemento visible del carrusel quiero posicionarlo cuando le de avanzar como el primero
+                });
+            }else {
+                alert('Lo sentimos, ya no hay mas slides disponibes en el array, por ende ya no puedes avanzar mas');
+            }
+
+        }
+
+        slides.forEach((slide) => {
+            observer.unobserve(slide);
+        });
+    }, options);
+
+    slides.forEach((slide) => {
+        observer.observe(slide);
+    });
+
 };
 
 const galeria$1 = document.getElementById('galeria');
