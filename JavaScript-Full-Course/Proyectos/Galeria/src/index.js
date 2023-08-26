@@ -1,3 +1,3 @@
-import './galeria/cargarCategorias';
-import './galeria/eventosGaleria';
-import './galeria/crearGaleriaPorCategoriaActiva';
+import './archivos-galeria/abrirGaleriaPorCategoriaActiva';
+import "./archivos-galeria/eventosGaleria";
+import "./archivos-galeria/agregarCategorias";
