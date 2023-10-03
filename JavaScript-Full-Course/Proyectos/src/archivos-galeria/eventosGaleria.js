@@ -31,4 +31,5 @@ galeria.addEventListener('click', (event) => {
     } else if (boton?.dataset?.accion === 'anterior-slide') {
         carrouselDireccionImagen('anterior');
     }
+    
 });
