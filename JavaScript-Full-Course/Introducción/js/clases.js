@@ -11,10 +11,10 @@ Y las clases tienen un metodo CONSTRUCTOR que lo que hace es formar el objeto co
 */
 
 class Usuario {
-    tipo = 'usuario';
+    tipo = 'usuario'; // Se debe trabajar con "=" al definir propiedades las clases.
     constructor(nombre, apellido) {
         this.nombre = nombre;
-        this.apellido = apellido;
+        this.apellido = apellido; //Cuando haces esto, y llamas a nombre y apellido creas una propiedad a la que le añades esos valores
 
         //El constructor se va a ejecutar en el momento en el que yo inicialice el objeto.
         //Lo usamos para definir las propiedades de la clase.
@@ -28,7 +28,7 @@ class Usuario {
     }
 }
 
-const user = new Usuario('Abraham Guillermo ', 'Umaña Delgado');
+const user = new Usuario('Abraham Guillermo ', 'Umaña Delgado'); // Instancia del objeto.
 console.log(user.obtenerNombreCompleto());
 
 

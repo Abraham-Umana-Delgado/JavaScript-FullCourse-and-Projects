@@ -13,8 +13,8 @@ class Usuario {
 }
 
 class Moderador extends Usuario {
-    constructor(nombre, password, permisos) {
-        super(nombre, password);
+    constructor(usuario, password, permisos) {
+        super(usuario, password);
         this.permisos = permisos;
     }
 

@@ -1,23 +1,23 @@
 /*
-📌 Son funciones que se pasan como parametros a otras funciones con el objetivo de que
-otras funciones puedan ejecutar a otras funciones
+📌 Un callback es una funcion que se pasa como parametro dentro de otra funcion para que esta pueda ejecutarla.
 */
 
-//Definicion de la funcion
+//Definiendo la funcion que va a ejecutar al callback.
 const obtenerPostUsuario = ((nombre, callback) => {
-    console.log(`Obteniendo el post del usuario ${nombre} ...`);
-
+    console.log(`Obteniendo los post del usuario ${nombre}...`);
     setTimeout(() => {
-        const post = ['Post1', 'Post2', 'Post3'];
-        callback(post);
-    }, 4000)
+        const postUsuario = ['post1', 'post2', 'post3', 'post4'];
+        callback(postUsuario);
+    }, 4000);
 });
 
+//Ejecutar la funcion que retorna al callback
 
-//Aqui se la da sentido a la funcion
-obtenerPostUsuario('Abraham Umana Delgado', (post) => {
-    console.log(post);
+obtenerPostUsuario('Abraham Umaña Delgado', (postUsuario) => {
+    console.log(postUsuario);
 });
+
+//La funcion postUsuario es el callback, que se ejecuta de forma interna cuando ejecuto a ObtenerPostUsuario de la base de datos.
 
 
 //Definiendo la funcion para luego argumentarla

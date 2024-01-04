@@ -4,33 +4,35 @@ navegador de que una vez ejecutemos la operacion en el programa este le va a res
 con la informacion que el usuario esta solicitando...
 */
 
-//Creamos la promesa y la definimos...
+//Creamos la promesa y la definimos..
 const promesa = new Promise((resolve, reject) => {
 
-    // La accion que la operacion le promete al navegador que le va a proporcionar
     setTimeout(() => {
-        const exito = false;
+        const exito = true;
         if (exito) {
-            resolve('La operacion tuvo exito');
+            resolve("El proceso tuvo exito");
         } else {
-            reject('La operacion no tuvo exito');
+            reject("La operacion fallo");
         }
     }, 4000);
+
 });
 
-//Como atrapo la promesa para que tenga sentido en el navegador
+/*
+Resolve y reject son funciones que ejecuta la promesa las cuales nos brindan un resultado determinado.
+*/
 
-//Con el metodo .THEN(), le indico al navegador que este al tanto de la informacion que le vamos a mandar y que me avise apenas la recibe
+//Ejecutar la promesa, hacer que el navegador se quede esperando la respuesta.
+
+//Si la operacion fue exitosa quiero que ejecutes esta funcion.
 promesa.then((mensaje) => {
     alert(mensaje);
 });
 
-// ESTE METODO THEN UNICAMENTE LANZARA SI LA PROMESA TUVO EXITO O NO.
+//Ejecuta el mensaje del resolve();
 
 promesa.catch((mensaje) => {
     alert(mensaje);
 });
 
-// ESTE METODO THEN UNICAMENTE LANZARA SI LA PROMESA FALLO.
-
-
+//Ejecuta el mensaje del reject();

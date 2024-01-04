@@ -1,26 +1,24 @@
+
+
 const fecthPosts = () => {
     return new Promise((resolve, reject) => {
-        //Ejecute la accion que el navegador va a esperar...
-
         setTimeout(() => {
-            const post = ['Post 1', 'Post 2', 'Post 3', 'Post 4'];
+            const postUsuario = ['Post1', 'Post2', 'Post3', 'Post4'];
             const error = false;
-
             if (error) {
-                reject('Hubo un error al tratar de obtener los posts');
+                reject('La operacion fallo');
             } else {
-                resolve(post);
+                resolve(postUsuario);
             }
-        }, 4000);
+        });
     });
-};
+}
 
-fecthPosts()
-    .then((post) => {
-        console.log(post);
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+// Para devolver la informacion que el navegador esta esperando, hay que hacerlo de esta forma
+fecthPosts().then((postUsuario) => {
+    console.log(postUsuario);
+}).catch((error) => {
+    console.log(error);
+})
 
-
+//const variable = fecthPosts(); Devuelve una promesa en estado pendiente, pero no la informacion que el navegador esta esperando.
